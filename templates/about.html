@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>O mně</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+    @media (prefers-color-scheme: light) {
+    button {
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      -webkit-transition-duration: 0.4s; /* Safari */
+      transition-duration: 0.4s;
+    }
+    .text{
+        color:lime;
+        animation-name: text; animation-duration: 14s; animation-iteration-count: infinite;
+    }
+    .title{
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+    .about_me:hover{
+            font-size: large;
+            animation-name: example; animation-duration: 4s; animation-iteration-count: infinite;
+        }
+        #div1{
+            background: gray;
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+    }
+    .form-control{
+        animation-name: in_div;animation-duration: 5s; animation-iteration-count: infinite;
+    }
+}/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: black;
+    }
+    .text{
+        color:lime;
+        animation-name: text; animation-duration: 14s; animation-iteration-count: infinite;
+    }
+    p{
+        color: white;
+    }
+    .title{
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+    h1{
+        color: wheat;
+    }
+    .form-control{
+        background-color: black;
+        animation-name: in_div;animation-duration: 5s; animation-iteration-count: infinite;
+    }
+    .about_me:hover{
+            font-size: large;
+            animation-name: example; animation-duration: 4s; animation-iteration-count: infinite;
+    }
+}
+@keyframes example {
+  0%{color:red}
+    50%{color:lime}
+    100%{color:orange}
+}
+@keyframes text{
+    0%{color: white;}
+    50%{color: aqua;}
+    80%{color: red;}
+}
+@keyframes in_div{
+    0%{border-radius: 0px;}
+    40%{border-radius: 20px;}
+    80%{border-radius: 30px;}
+}
+</style>
+<body>
+<div class="container" style="margin-top:30px; margin-left: 30px;">
+      <div class="row">
+    <div class="col-sm-4">
+        <h1>Vytvořil Jan Přikryl</h1>
+        <p>2020</p>
+</div>
+
+<div class="container" style="margin-top:30px; margin-left: 30px;">
+      <div class="row">
+    <div class="col-sm-4">
+        <a href="{% url 'home' %}">Zpět na hlavní stránku</a>
+    </div>
+      </div>
+</div>
+</div>
+</div>
+</body>
+</html>

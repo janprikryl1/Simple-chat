@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Veřejný chat</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    {% load static %}
+  <script type="text/javascript" src="{% static "jquery.cookie.js" %}"></script>
+   <!-- <script type="text/javascript" src="{% static "functions.js" %}" type="text/javascript"></script> -->
+</head>
+<style>
+    @media (prefers-color-scheme: light) {
+    .text{
+        color:lime;
+        animation-name: text; animation-duration: 14s; animation-iteration-count: infinite;
+    }
+    .title{
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+    .about_me:hover{
+            font-size: large;
+            animation-name: example; animation-duration: 4s; animation-iteration-count: infinite;
+        }
+        #div1{
+            background: gray;
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+    }
+    .form-control{
+        animation-name: in_div;animation-duration: 5s; animation-iteration-count: infinite;
+    }
+}/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: black;
+    }
+    .text{
+        color:lime;
+        animation-name: text; animation-duration: 14s; animation-iteration-count: infinite;
+    }
+    p{
+        color: white;
+    }
+    a{
+        color: white;
+    }
+    .title{
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+    h1{
+        color: wheat;
+    }
+    .form-control{
+        background-color: black;
+        animation-name: in_div;animation-duration: 5s; animation-iteration-count: infinite;
+    }
+    .about_me:hover{
+            font-size: large;
+            animation-name: example; animation-duration: 4s; animation-iteration-count: infinite;
+    }
+}
+@keyframes example {
+  0%{color:red}
+    50%{color:lime}
+    100%{color:orange}
+}
+@keyframes text{
+    0%{color: white;}
+    50%{color: aqua;}
+    80%{color: red;}
+}
+@keyframes in_div{
+    0%{border-radius: 0px;}
+    40%{border-radius: 20px;}
+    80%{border-radius: 30px;}
+}
+[aria-label] {
+position: relative;
+}
+
+[aria-label]:after {
+content: attr(aria-label);
+display: none;
+position: absolute;
+top: 110%;
+left: 10px;
+z-index: 5000;
+pointer-events: none;
+padding: 8px 10px;
+line-height: 15px;
+white-space: nowrap;
+text-decoration: none;
+text-indent: 0;
+overflow: visible;
+font-size: .9em;
+font-weight: normal;
+color: #fff;
+text-shadow: 1px 0 1px #888;
+background-color: #412917;
+border-left: 6px solid #d37092;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+-webkit-box-shadow: 1px 2px 6px rgba(0,0,0,0.3);
+box-shadow: 1px 2px 6px rgba(0,0,0,0.3);
+}
+
+a:focus {
+  outline:1px dashed #E92C6C;
+}
+
+[aria-label]:hover:after, [aria-label]:focus:after {
+display: block;
+}
+</style>
+<body>
+
+<div class="title">
+<h1 style="font-size: 20px;">Vítejte</h1>
+    <p style="animation-name: example; animation-duration: 4s; animation-iteration-count: infinite;">Není zde žádná cenzura, tak buďte slušní</p>
+      </div>
+
+<script>
+    var te = "";
+    $(document).ready(function (event) {
+     var user_name = $.cookie("name");
+     if (user_name == undefined)
+     {
+         user_name = prompt("Zadejte vaše jméno pro diskuzi", "");
+        $.cookie("name", user_name, { expires: 17 });
+     }
+     /*else {
+         alert(user_name);
+     }*/
+
+$('#send').on('submit', function (event) {
+    event.preventDefault();
+           $.ajax({
+               type:'POST',
+               url:'{% url 'upload_msg' %}',
+               data:{
+                   'user':$.cookie("name"),
+                   'msg': $('#msg').val(),
+                   'csrfmiddlewaretoken':'{{ csrf_token }}'
+               },
+            success: function (data) {
+                   if (data.Status == "OK")
+                   {
+                       alert("Přidáno");
+                       $('#msg').val("");
+                   }
+                    if (data.Status == "error")
+                    {
+                        alert("Chyba");
+                    }
+            },
+               error: function (edata) {
+                   alert("Chyba");
+               }
+           })
+});
+function refresh() {
+$.ajax({
+               type:'POST',
+               url:'{% url 'load' %}',
+                data:{
+                   'datas':te,
+                   'csrfmiddlewaretoken':'{{ csrf_token }}'
+                },
+            success: function (data) {
+            if (data.data != "nothong") {
+                    $('#div1').text("");
+                    te = data.data;
+                    var texty = data.data.split("@@@");
+                    for (var i = 0; i <= texty.length -2; i++) {
+                        var textys = texty[i].split("&&&");
+                        var texts = textys[0]+", "+textys[1]+'\n';
+                        var para = document.createElement("a");
+                        para.setAttribute('aria-label', textys[2]);
+                        para.innerText = texts;
+                        //para.appendChild(document.createTextNode(texts));
+                        para.className = "text";
+                        /*var colors = ['aqua', 'lime', 'yellow'];
+                        var random_color = colors[Math.floor(Math.random() * colors.length)];
+                        para.setAttribute("style", 'background-color:'+random_color+';');*/
+                        var element = document.getElementById("div1");
+                        element.appendChild(para);
+                        //text += data.data[i][1]+", od: "+data.data[i][0]+" ("+data.data[i][2]+")\n";
+                    }
+                    //$('#msgs').text(text);
+                }
+            else {
+                
+            }
+            },
+               error: function (edata) {
+                   alert("Chyba, omlouváme se");
+               }
+           })
+
+}
+window.setInterval(refresh, 500)
+});
+</script>
+<br>
+<div class="container" style="margin-top:5px; margin-left: 30px;">
+      <div class="row">
+    <div class="col-sm">
+    <form id="send">
+            {% csrf_token %}
+            <input type="text" id="msg" placeholder="Zpráva" class="form-control">
+            <br>
+            <input type="submit" class="btn btn-primary">
+        </form>
+</div>
+    <div class="col-sm">
+        <div id="div1"></div>
+
+</div>
+
+
+    
+</div>
+</div>
+<div class="container" style="margin-top:30px; margin-left: 30px;">
+<div class="col-sm">
+        <a href="{% url 'about' %}" class="about_me">O mně</a>
+    </div>
+</div>
+</body>
+</html>
